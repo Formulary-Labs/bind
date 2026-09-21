@@ -134,9 +134,9 @@ Flags appear in JSON and Markdown output. They do not cause a non-zero exit — 
 | `0` | Mapping resolved successfully |
 | `2` | Tool error — missing `--document`, unreadable file, or internal failure |
 
-## Catalog acquisition
+## Catalogs
 
-`bind` requires gemara `ControlCatalog` and `MappingDocument` YAML files. See [CATALOGS.md](https://github.com/Formulary-Labs/.github/blob/main/CATALOGS.md) for known catalog sources.
+`bind` requires a gemara `MappingDocument` and optionally source and target `ControlCatalog` YAML files for title resolution. See [CATALOGS.md](https://github.com/Formulary-Labs/.github/blob/main/CATALOGS.md) for known upstream catalog and mapping document sources, and for guidance on authoring your own.
 
 ## Pipeline context
 
