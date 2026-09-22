@@ -10,7 +10,7 @@ import (
 
 func makeDoc(src, tgt string, mappings []gemara.Mapping) *gemara.MappingDocument {
 	return &gemara.MappingDocument{
-		Title: "test mapping",
+		Title:           "test mapping",
 		SourceReference: gemara.TypedMapping{ReferenceId: src},
 		TargetReference: gemara.TypedMapping{ReferenceId: tgt},
 		Mappings:        mappings,
