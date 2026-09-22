@@ -13,8 +13,8 @@ import (
 	"github.com/gemaraproj/go-gemara/fetcher"
 )
 
-// MappingResult is the structured output of a bind run. //nolint:revive // stutter is intentional
-type MappingResult struct {
+// MappingResult is the structured output of a bind run.
+type MappingResult struct { //nolint:revive // stutter is intentional
 	// Source is the source framework identifier.
 	Source string `json:"source"`
 	// Target is the target framework identifier.
@@ -31,9 +31,9 @@ type MappingResult struct {
 	Flags []string `json:"flags,omitempty"`
 }
 
-// MappingEntry is a single resolved mapping between a source control and its //nolint:revive // stutter is intentional
+// MappingEntry is a single resolved mapping between a source control and its
 // target controls.
-type MappingEntry struct {
+type MappingEntry struct { //nolint:revive // stutter is intentional
 	SourceID     string         `json:"source_id"`
 	SourceTitle  string         `json:"source_title,omitempty"`
 	Relationship string         `json:"relationship"`
