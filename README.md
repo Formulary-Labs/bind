@@ -8,9 +8,18 @@ go install github.com/Formulary-Labs/bind/cmd/bind@latest
 
 Or download a pre-built binary from the [releases page](https://github.com/Formulary-Labs/bind/releases) for `linux/amd64`, `darwin/arm64`, `darwin/amd64`, or `windows/amd64`.
 
+## In the ecosystem
+
+Formulary is a **pick-and-choose** suite of small, single-purpose CLIs. Install only the tools your workflow needs; each runs standalone. Shared contracts live in [`substrate`](https://github.com/Formulary-Labs/substrate). Optional Make pipelines (or an agent such as `regimen`) compose tools into a run — plug-and-play, not all-or-nothing.
+
+**This tool:** cross-framework control mapping resolver.  
+**Works with:** `probe` (validate catalogs/mappings), `titer` (coverage).  
+**Pipeline stage:** assess.
+
+
 ## What it does
 
-`bind` reads a gemara `MappingDocument` (Layer 1 artifact) and resolves the cross-framework control mappings it defines. Pass in source and target `ControlCatalog` YAMLs to get human-readable titles alongside every control ID and to catch IDs that don't exist in the catalog.
+`bind` reads a gemara `MappingDocument` (Layer 1 artifact) and resolves the cross-framework control mappings it defines. Pass in source and target catalogs — native OSCAL or gemara `ControlCatalog` — to get human-readable titles alongside every control ID and to catch IDs that don't exist in the catalog.
 
 Without catalogs, `bind` works purely from the `MappingDocument` — IDs are used directly.
 
@@ -65,7 +74,7 @@ bind --document mappings/iso42001-to-iso27001.yaml --filter unmapped --format cs
     {
       "source_id": "A.5.1",
       "source_title": "Policies for information security",
-      "relationship": "subset-of",
+      "relationship": "implements",
       "targets": [
         {
           "target_id": "PM-1",
@@ -91,27 +100,32 @@ bind --document mappings/iso42001-to-iso27001.yaml --filter unmapped --format cs
 
 | Source | Relationship | Target Controls | Strength |
 |---|---|---|---|
-| A.5.1 — Policies for information security | subset-of | PM-1 — Information Security Program Plan | 8/10 |
+| A.5.1 — Policies for information security | implements | PM-1 — Information Security Program Plan | 8/10 |
 ```
 
 ### CSV
 
 ```
 source_id,source_title,relationship,target_id,target_title,strength,rationale
-A.5.1,Policies for information security,subset-of,PM-1,Information Security Program Plan,8,...
+A.5.1,Policies for information security,implements,PM-1,Information Security Program Plan,8,...
 ```
 
 ## Relationships
 
-`bind` preserves the `relationship` value from the `MappingDocument` as-is. Typical values:
+`bind` preserves the `relationship` value from the `MappingDocument` as-is. The valid vocabulary (enforced by go-gemara at load time):
 
 | Relationship | Meaning |
 |---|---|
-| `subset-of` | Source control is a subset of the target |
-| `superset-of` | Source control is a superset of the target |
 | `equivalent` | Controls are functionally equivalent |
-| `related` | Partial overlap; not a direct substitution |
+| `implements` | Source control implements the target |
+| `implemented-by` | Source control is implemented by the target |
+| `supports` | Source control supports the target |
+| `supported-by` | Source control is supported by the target |
+| `relates-to` | Partial overlap; not a direct substitution |
+| `subsumes` | Source control subsumes the target |
 | `no-match` | No corresponding target control |
+
+Any other value is rejected when the `MappingDocument` is parsed — it never reaches `bind`'s output.
 
 `no-match` entries count as unmapped and appear in `--filter unmapped` output.
 
@@ -136,7 +150,7 @@ Flags appear in JSON and Markdown output. They do not cause a non-zero exit — 
 
 ## Catalogs
 
-`bind` requires a gemara `MappingDocument` and optionally source and target `ControlCatalog` YAML files for title resolution. See [CATALOGS.md](https://github.com/Formulary-Labs/.github/blob/main/CATALOGS.md) for known upstream catalog and mapping document sources, and for guidance on authoring your own.
+`bind` requires a gemara `MappingDocument`. Source and target catalogs are optional and may be OSCAL or gemara; they supply titles and missing-id checks. See [CATALOGS.md](https://github.com/Formulary-Labs/.github/blob/main/CATALOGS.md) for known upstream catalog and mapping document sources, and for guidance on authoring your own.
 
 ## Pipeline context
 
